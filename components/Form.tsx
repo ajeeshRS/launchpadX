@@ -17,7 +17,7 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { createInitializeInstruction, pack } from "@solana/spl-token-metadata";
 import { Keypair, SystemProgram, Transaction } from "@solana/web3.js";
 import { Poppins } from "next/font/google";
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 const poppins = Poppins({
   weight: ["400", "600", "800"],
