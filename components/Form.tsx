@@ -17,7 +17,7 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { createInitializeInstruction, pack } from "@solana/spl-token-metadata";
 import { Keypair, SystemProgram, Transaction } from "@solana/web3.js";
 import { Poppins } from "next/font/google";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { toast } from "sonner";
 const poppins = Poppins({
   weight: ["400", "600", "800"],
@@ -26,8 +26,8 @@ const poppins = Poppins({
 export default function Form() {
   const [name, setName] = useState("");
   const [symbol, setSymbol] = useState("");
-  const [decimals, setDecimals] = useState<any>("");
-  const [supply, setSupply] = useState<any>("");
+  const [decimals, setDecimals] = useState<string>("");
+  const [supply, setSupply] = useState<string>("");
   const [metadataUrl, setMetadataUrl] = useState("");
   const [revokeMintAuthority, setRevokeMintAuthority] = useState(false);
   const [revokeUpdateAuthority, setRevokeUpdateAuthority] = useState(false);
@@ -37,7 +37,7 @@ export default function Form() {
   const { connection } = useConnection();
   const wallet = useWallet();
 
-  const createToken = async (e: Event) => {
+  const createToken = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!wallet.publicKey) {
       console.error("No wallet connected!");
@@ -200,7 +200,6 @@ export default function Form() {
         } catch (err) {
           toast.error("Could't revoke update Authority");
         }
-
       }
       setLoading(false);
       toast.success(`You just created your own Token`);
@@ -242,7 +241,7 @@ export default function Form() {
   return (
     <form
       className=" w-full h-fit flex justify-center items-center pb-10"
-      onSubmit={(e: any) => {
+      onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
         createToken(e);
       }}
     >
