@@ -10,6 +10,7 @@ import {
   getAssociatedTokenAddressSync,
   getMintLen,
   LENGTH_SIZE,
+  setAuthority,
   TOKEN_2022_PROGRAM_ID,
   TYPE_SIZE,
 } from "@solana/spl-token";
@@ -30,7 +31,7 @@ export default function Form() {
   const [supply, setSupply] = useState<string>("");
   const [metadataUrl, setMetadataUrl] = useState("");
   const [revokeMintAuthority, setRevokeMintAuthority] = useState(false);
-  const [revokeUpdateAuthority, setRevokeUpdateAuthority] = useState(false);
+  // const [revokeUpdateAuthority, setRevokeUpdateAuthority] = useState(false);
   const [revokeFreezeAuthority, setRevokeFreezeAuthority] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -181,26 +182,26 @@ export default function Form() {
         console.log("Mint authority revoked!");
       }
 
-      if (revokeUpdateAuthority === true) {
-        const transaction5 = new Transaction().add(
-          createSetAuthorityInstruction(
-            mintKeyPair.publicKey,
-            wallet.publicKey,
-            AuthorityType.AccountOwner,
-            null,
-            [],
-            TOKEN_2022_PROGRAM_ID
-          )
-        );
+      // if (revokeUpdateAuthority === true) {
+      //   const transaction5 = new Transaction().add(
+      //     createSetAuthorityInstruction(
+      //       mintKeyPair.publicKey,
+      //       wallet.publicKey,
+      //       AuthorityType.AccountOwner,
+      //       null,
+      //       [],
+      //       TOKEN_2022_PROGRAM_ID
+      //     )
+      //   );
 
-        try {
-          await wallet.sendTransaction(transaction5, connection);
-          toast.success("Update authority Revoked");
-          // console.log("Update authority revoked!");
-        } catch (err) {
-          toast.error("Could't revoke update Authority");
-        }
-      }
+      //   try {
+      //     await wallet.sendTransaction(transaction5, connection);
+      //     toast.success("Update authority Revoked");
+      //     // console.log("Update authority revoked!");
+      //   } catch (err) {
+      //     toast.error("Could't revoke update Authority");
+      //   }
+      // }
       setLoading(false);
       toast.success(`You just created your own Token`);
     } catch (err) {
@@ -222,11 +223,11 @@ export default function Form() {
     }
   }, [revokeFreezeAuthority]);
 
-  useEffect(() => {
-    if (revokeUpdateAuthority === true) {
-      toast.error("You can't update the Update authority after creating");
-    }
-  }, [revokeUpdateAuthority]);
+  // useEffect(() => {
+  //   if (revokeUpdateAuthority === true) {
+  //     toast.error("You can't update the Update authority after creating");
+  //   }
+  // }, [revokeUpdateAuthority]);
 
   if (!wallet.connected) {
     return (
@@ -331,7 +332,7 @@ export default function Form() {
             />
             <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
           </label>
-          <label className="inline-flex md:w-1/6 w-5/6 justify-between items-center cursor-pointer mx-5 md:my-0 my-1">
+          {/* <label className="inline-flex md:w-1/6 w-5/6 justify-between items-center cursor-pointer mx-5 md:my-0 my-1">
             <span className="ms-3 text-sm font-medium text-gray-900 mr-1 ">
               Revoke Update authority{" "}
             </span>
@@ -342,7 +343,7 @@ export default function Form() {
               className="sr-only peer"
             />
             <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-          </label>
+          </label> */}
         </div>
         <button
           className={` ${poppins.className} px-4 py-3 bg-[#252525] hover:bg-[#000] transition duration-200 ease-in-out text-white rounded-xl font-semibold border border-black `}
