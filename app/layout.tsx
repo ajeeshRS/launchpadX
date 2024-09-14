@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { Toaster } from "sonner";
 
 
 const geistMono = localFont({
@@ -25,6 +26,7 @@ export default function RootLayout({
         className={`${geistMono.variable}  antialiased w-full flex items-center flex-col`}
       >
         {children}
+        <Toaster />
       </body>
     </html>
   );

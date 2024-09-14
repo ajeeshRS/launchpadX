@@ -23,9 +23,9 @@ export default function Navbar() {
           color: "#020202",
           fontSize: "13px",
         }}
-      >{`${
-        wallet.publicKey ? "Connected" : "Connect wallet"
-      }`}</WalletMultiButton>
+      >
+        {`${wallet.publicKey ? "Connected"  : "Connect wallet"  }`}
+      </WalletMultiButton>
     </nav>
   );
 }

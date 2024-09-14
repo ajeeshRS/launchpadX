@@ -15,12 +15,7 @@ import {
 } from "@solana/spl-token";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { createInitializeInstruction, pack } from "@solana/spl-token-metadata";
-import {
-  Keypair,
-  sendAndConfirmTransaction,
-  SystemProgram,
-  Transaction,
-} from "@solana/web3.js";
+import { Keypair, SystemProgram, Transaction } from "@solana/web3.js";
 import { Poppins } from "next/font/google";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -50,7 +45,7 @@ export default function Form() {
       return;
     }
     try {
-      // setLoading(true);
+      setLoading(true);
       const mintKeyPair = Keypair.generate();
 
       const metaData = {
@@ -58,12 +53,15 @@ export default function Form() {
         name: name,
         symbol: symbol,
         uri: metadataUrl,
-        description:"",
+        description: "",
         additionalMetadata: [],
       };
-      console.log("metadata:", metaData);
+
+      // console.log("metadata:", metaData);
+
       const mintLen = getMintLen([ExtensionType.MetadataPointer]);
-      console.log("mintlen:", mintLen);
+      // console.log("mintlen:", mintLen);
+
       const metadataLen = TYPE_SIZE + LENGTH_SIZE + pack(metaData).length;
 
       const lamports = await connection.getMinimumBalanceForRentExemption(
@@ -115,12 +113,14 @@ export default function Form() {
       ).blockhash;
       transaction.partialSign(mintKeyPair);
 
-      console.log(transaction);
+      // console.log(transaction);
       try {
         const signature = await wallet.sendTransaction(transaction, connection);
         console.log("Transaction successful with signature:", signature);
+        toast.success("Mint created");
       } catch (error) {
         console.log(error);
+        toast.error("Mint creation failed");
       }
 
       const associatedToken = getAssociatedTokenAddressSync(
@@ -154,10 +154,12 @@ export default function Form() {
           TOKEN_2022_PROGRAM_ID
         )
       );
-
-      await wallet.sendTransaction(transaction3, connection);
-
-      console.log("minted!");
+      try {
+        await wallet.sendTransaction(transaction3, connection);
+        toast.success("Supply minted to ATA");
+      } catch (err) {
+        toast.error("Failed to mint supply");
+      }
 
       if (revokeMintAuthority === true) {
         const transaction4 = new Transaction().add(
@@ -170,8 +172,12 @@ export default function Form() {
             TOKEN_2022_PROGRAM_ID
           )
         );
-
-        await wallet.sendTransaction(transaction4, connection);
+        try {
+          await wallet.sendTransaction(transaction4, connection);
+          toast.success("Mint authority Revoked");
+        } catch (err) {
+          toast.error("Could't revoke mint Authority");
+        }
         console.log("Mint authority revoked!");
       }
 
@@ -187,10 +193,16 @@ export default function Form() {
           )
         );
 
-        await wallet.sendTransaction(transaction5, connection);
-        console.log("Update authority revoked!");
+        try {
+          await wallet.sendTransaction(transaction5, connection);
+          toast.success("Update authority Revoked");
+          // console.log("Update authority revoked!");
+        } catch (err) {
+          toast.error("Could't revoke update Authority");
+        }
+
       }
-      // setLoading(false);
+      setLoading(false);
       toast.success(`You just created your own Token`);
     } catch (err) {
       console.error("Error in creating token: ", err);
@@ -216,6 +228,16 @@ export default function Form() {
       toast.error("You can't update the Update authority after creating");
     }
   }, [revokeUpdateAuthority]);
+
+  if (!wallet.connected) {
+    return (
+      <div className="w-full h-full flex justify-center items-center">
+        <p className="text-xl text-gray-700">
+          Please connect your Wallet to move on !
+        </p>
+      </div>
+    );
+  }
 
   return (
     <form
@@ -327,7 +349,7 @@ export default function Form() {
           className={` ${poppins.className} px-4 py-3 bg-[#252525] hover:bg-[#000] transition duration-200 ease-in-out text-white rounded-xl font-semibold border border-black `}
           type="submit"
         >
-          Create Token
+          {loading ? "Loading.." : "Create Token"}
         </button>
       </div>
     </form>
