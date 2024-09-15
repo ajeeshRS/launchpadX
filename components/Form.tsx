@@ -10,7 +10,6 @@ import {
   getAssociatedTokenAddressSync,
   getMintLen,
   LENGTH_SIZE,
-  setAuthority,
   TOKEN_2022_PROGRAM_ID,
   TYPE_SIZE,
 } from "@solana/spl-token";
